@@ -189,7 +189,36 @@
 
     <div class="row content">
         <!-- Cartes de produits -->
-        <!-- Carte de produit -->
+        <div class="card col-sm-12 col-md-4 col-lg-3 col-xl-3" *ngFor="let product of listProducts">
+            <div class="d-flex flex-row">
+                <img [src]="product.image || '../../assets/images/Products_images/image_template.png'" class="" alt="image du produit">
+                <div class="justify-content-end">
+                    <svg class="heart mb-3" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
+                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="card-body">
+                <h4 class="card-title">{{product.name}}</h4>
+                <p class="card-text">Lorem ipsum dolor sit amet consectetur adipisicing elit. Vero asperiores adipisci eos cumque tenetur consequuntur hic architecto  </p>
+                <h4 class="price">{{product.price}} FCFA</h4>
+                <div class="row action">
+                    <div class="col-sm-6 col-md-8 col-lg-8 col-xl-8 button-stock">
+                        <button type="button" class="stock btn btn-primary position-relative">Stock
+                            <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{product.quantity}}<span class="visually-hidden">unread messages</span></span>
+                        </button>
+                    </div>
+                    <div class="col-sm-6 col-md-4 col-lg-4 col-xl-4 button-action">
+                        <a (click)="onUpdateProduct(product.id)" class="modifier" data-bs-toggle="modal" data-bs-target="#editProductModal">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <a (click)="onDeleteProduct(product.id)" class="supprimer">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Modal d'ajout de produit -->
