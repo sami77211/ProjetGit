@@ -1,3 +1,6 @@
+<<<<<<< HEAD
+# ProjetGit
+=======
 # MiniProjectAngularFrontend
 
 
@@ -39,3 +42,4 @@ Le modèle **produit** a les champs suivants : **_id**, **name**, **price**, **q
 ## Project Status 
       Complete 
 
+>>>>>>> 004f06fa0f1d7332bb94a95c0139c41ffcbd1e85
