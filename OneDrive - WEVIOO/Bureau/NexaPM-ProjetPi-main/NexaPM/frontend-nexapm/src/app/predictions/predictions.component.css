@@ -1,0 +1,305 @@
+/* Variables */
+:root {
+    --primary-color: #4361ee;
+    --secondary-color: #3f37c9;
+    --success-color: #4cc9f0;
+    --warning-color: #f72585;
+    --info-color: #4895ef;
+    --light-color: #f8f9fa;
+    --dark-color: #212529;
+    --border-radius: 0.5rem;
+    --transition: all 0.3s ease;
+  }
+  
+  /* Container principal */
+  .predictions-container {
+    padding: 2rem;
+    background-color: var(--light-color);
+    min-height: 100vh;
+  }
+  
+  /* En-tête */
+  .predictions-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+  
+  .main-title {
+    font-size: 2rem;
+    color: var(--primary-color);
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 1.1rem;
+  }
+  
+  .actions-section {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+  }
+  
+  .period-selector select {
+    padding: 0.5rem 1rem;
+    border-radius: var(--border-radius);
+    border: 1px solid #ddd;
+    background-color: white;
+    cursor: pointer;
+  }
+  
+  .refresh-btn {
+    padding: 0.5rem 1rem;
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: var(--transition);
+  }
+  
+  .refresh-btn:hover {
+    background-color: var(--secondary-color);
+  }
+  
+  /* Grille des métriques */
+  .metrics-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .metric-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    transition: var(--transition);
+  }
+  
+  .metric-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  }
+  
+  .metric-icon {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: rgba(67, 97, 238, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    color: var(--primary-color);
+  }
+  
+  .metric-content h3 {
+    font-size: 0.9rem;
+    color: #666;
+    margin-bottom: 0.5rem;
+  }
+  
+  .metric-content p {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--dark-color);
+    margin: 0;
+  }
+  
+  /* Conteneur des graphiques */
+  .charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+  
+  .chart-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .chart-card h3 {
+    margin-bottom: 1rem;
+    color: var(--dark-color);
+  }
+  
+  /* Tableau des prédictions */
+  .predictions-table-container {
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    overflow: hidden;
+    margin-bottom: 2rem;
+  }
+  
+  .predictions-table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  .predictions-table th,
+  .predictions-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .predictions-table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+  }
+  
+  .accuracy-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-weight: 500;
+    text-align: center;
+    display: inline-block;
+  }
+  
+  .accuracy-badge.high {
+    background-color: rgba(76, 201, 240, 0.1);
+    color: var(--success-color);
+  }
+  
+  .accuracy-badge.medium {
+    background-color: rgba(72, 149, 239, 0.1);
+    color: var(--info-color);
+  }
+  
+  .accuracy-badge.low {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: var(--warning-color);
+  }
+  
+  /* Section Insights */
+  .insights-section {
+    background: white;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  }
+  
+  .insights-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+  }
+  
+  .insights-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  .insight-card {
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    background-color: #f8f9fa;
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+  }
+  
+  .insight-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: rgba(67, 97, 238, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: var(--primary-color);
+  }
+  
+  .insight-icon.warning {
+    background-color: rgba(247, 37, 133, 0.1);
+    color: var(--warning-color);
+  }
+  
+  .insight-icon.success {
+    background-color: rgba(76, 201, 240, 0.1);
+    color: var(--success-color);
+  }
+  
+  .insight-content h4 {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--dark-color);
+  }
+  
+  .insight-content p {
+    color: #666;
+    margin: 0;
+    line-height: 1.5;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .predictions-container {
+      padding: 1rem;
+    }
+  
+    .predictions-header {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 1rem;
+    }
+  
+    .actions-section {
+      width: 100%;
+      justify-content: space-between;
+    }
+  
+    .charts-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .predictions-table-container {
+      overflow-x: auto;
+    }
+  
+    .insights-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+  
+  /* Animations */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .metric-card, .chart-card, .insight-card {
+    animation: fadeIn 0.5s ease-out;
+  }
+  

@@ -1,0 +1,116 @@
+.dashboard-container {
+    padding: 24px;
+    background-color: #f5f5f5;
+  }
+  
+  .quick-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  
+  .stat-card {
+    transition: transform 0.3s ease;
+  }
+  
+  .stat-card:hover {
+    transform: translateY(-5px);
+  }
+  
+  .stat-card mat-card-content {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+  }
+  
+  .stat-icon {
+    background-color: #2C3E50;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 20px;
+  }
+  
+  .stat-icon.expenses {
+    background-color: #E74C3C;
+  }
+  
+  .stat-icon.savings {
+    background-color: #3498DB;
+  }
+  
+  .stat-icon mat-icon {
+    color: white;
+    font-size: 24px;
+  }
+  
+  .stat-details {
+    flex: 1;
+  }
+  
+  .stat-details h3 {
+    margin: 0;
+    color: #666;
+    font-size: 14px;
+  }
+  
+  .amount {
+    margin: 8px 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #2C3E50;
+  }
+  
+  .trend {
+    margin: 0;
+    font-size: 12px;
+  }
+  
+  .trend.positive {
+    color: #27AE60;
+  }
+  
+  .trend.negative {
+    color: #E74C3C;
+  }
+  
+  .trend.neutral {
+    color: #7F8C8D;
+  }
+  
+  .charts-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+    gap: 24px;
+  }
+  
+  .chart-card {
+    min-height: 400px;
+  }
+  
+  .chart-card mat-card-header {
+    padding: 16px;
+  }
+  
+  .chart-card mat-card-content {
+    padding: 16px;
+    height: calc(100% - 80px);
+  }
+  
+  @media (max-width: 768px) {
+    .dashboard-container {
+      padding: 16px;
+    }
+  
+    .charts-container {
+      grid-template-columns: 1fr;
+    }
+  
+    .chart-card {
+      min-height: 350px;
+    }
+  }

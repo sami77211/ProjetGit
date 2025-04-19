@@ -1,0 +1,218 @@
+<div class="container-fluid py-4">
+    <!-- En-tête -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="display-5 fw-bold text-primary">
+            <i class="fas fa-receipt me-2"></i>Gestion des Dépenses
+          </h1>
+          <button class="btn btn-primary btn-lg" (click)="openModal('create')">
+            <i class="fas fa-plus-circle me-2"></i>Nouvelle Dépense
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Dashboard -->
+    <div class="row g-4 mb-4">
+      <!-- Statistiques -->
+      <div class="col-md-8">
+        <div class="row g-4">
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                    <i class="fas fa-money-bill-wave text-primary fa-2x"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1">Total Dépenses</h6>
+                    <h2 class="mb-0">{{formatCurrency(totalExpenses)}}</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                    <i class="fas fa-calendar text-success fa-2x"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1">Dépenses Mensuelles</h6>
+                    <h2 class="mb-0">{{formatCurrency(monthlyExpenses)}}</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card h-100 border-0 shadow-sm">
+              <div class="card-body">
+                <div class="d-flex align-items-center">
+                  <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                    <i class="fas fa-chart-line text-info fa-2x"></i>
+                  </div>
+                  <div>
+                    <h6 class="text-muted mb-1">Moyenne Dépenses</h6>
+                    <h2 class="mb-0">{{formatCurrency(averageExpense)}}</h2>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Graphique -->
+      <div class="col-md-4">
+        <div class="card border-0 shadow-sm">
+          <div class="card-body">
+            <h5 class="card-title mb-3">Dépenses par Fournisseur</h5>
+            <canvas id="expenseChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tableau des dépenses -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Description</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Fournisseur</th>
+                <th>Budget ID</th>
+                <th>Justificatif</th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let expense of expenses">
+                <td>
+                  <div class="fw-bold">{{expense.description}}</div>
+                </td>
+                <td>
+                  <div class="badge bg-success bg-opacity-10 text-success">
+                    
+  <!-- Suite du tableau -->
+  {{formatCurrency(expense.montant)}}
+</div>
+</td>
+<td>{{expense.date_depense | date:'dd/MM/yyyy'}}</td>
+<td>
+<div class="d-flex align-items-center">
+  <div class="avatar-circle me-2">{{expense.fournisseur.charAt(0)}}</div>
+  {{expense.fournisseur}}
+</div>
+</td>
+<td>
+<span class="badge bg-primary bg-opacity-10 text-primary">
+  {{expense.id_budget}}
+</span>
+</td>
+<td>
+<a href="#" class="btn btn-sm btn-link text-decoration-none">
+  <i class="fas fa-file-pdf me-1"></i>Voir
+</a>
+</td>
+<td class="text-end">
+<button class="btn btn-sm btn-outline-primary me-2" (click)="openModal('edit', expense)">
+  <i class="fas fa-edit me-1"></i>Modifier
+</button>
+<button class="btn btn-sm btn-outline-danger" (click)="deleteExpense(expense._id)">
+  <i class="fas fa-trash-alt me-1"></i>Supprimer 
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<!-- Modal (affichée seulement si isModalOpen est true) -->
+<div *ngIf="isModalOpen" class="modal show" tabindex="-1">
+  <div class="" (click)="closeModal()"></div>
+  <div class="modal-dialog modal-dialog-centered" (click)="$event.stopPropagation()">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">
+          {{ modalMode === 'create' ? 'Nouvelle Dépense' : 'Modifier la Dépense' }}
+        </h5>
+        <button type="button" class="btn-close" (click)="closeModal()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="expenseForm" (ngSubmit)="onSubmit()" class="needs-validation">
+          <div class="mb-3">
+            <label class="form-label">ID Budget</label>
+            <input type="text" class="form-control" formControlName="id_budget"
+                   [class.is-invalid]="expenseForm.get('id_budget')?.invalid && expenseForm.get('id_budget')?.touched">
+            <div class="invalid-feedback">
+              L'ID du budget est requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Description</label>
+            <textarea class="form-control" formControlName="description" rows="3"
+                      [class.is-invalid]="expenseForm.get('description')?.invalid && expenseForm.get('description')?.touched"></textarea>
+            <div class="invalid-feedback">
+              La description est requise
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Montant</label>
+            <div class="input-group">
+              <span class="input-group-text">€</span>
+              <input type="number" class="form-control" formControlName="montant"
+                     [class.is-invalid]="expenseForm.get('montant')?.invalid && expenseForm.get('montant')?.touched">
+            </div>
+            <div class="invalid-feedback">
+              Le montant doit être positif
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Date de dépense</label>
+            <input type="date" class="form-control" formControlName="date_depense"
+                   [class.is-invalid]="expenseForm.get('date_depense')?.invalid && expenseForm.get('date_depense')?.touched">
+            <div class="invalid-feedback">
+              La date est requise
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Fournisseur</label>
+            <input type="text" class="form-control" formControlName="fournisseur"
+                   [class.is-invalid]="expenseForm.get('fournisseur')?.invalid && expenseForm.get('fournisseur')?.touched">
+            <div class="invalid-feedback">
+              Le fournisseur est requis
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Justificatif</label>
+            <input type="file" class="form-control" formControlName="justificatif">
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="closeModal()">
+              <i class="fas fa-times me-2"></i>Annuler
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="expenseForm.invalid">
+              <i class="fas fa-save me-2"></i>{{ modalMode === 'create' ? 'Créer' : 'Modifier' }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+

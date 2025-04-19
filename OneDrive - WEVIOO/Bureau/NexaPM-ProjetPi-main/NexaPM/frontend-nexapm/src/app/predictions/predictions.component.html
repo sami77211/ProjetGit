@@ -1,0 +1,195 @@
+<div class="predictions-container">
+    <!-- En-tête -->
+    <div class="predictions-header">
+      <div class="title-section">
+        <h1 class="main-title">
+          <i class="fas fa-brain"></i>
+          Prédictions IA des Dépenses
+        </h1>
+        <p class="subtitle">Analyse prédictive basée sur l'intelligence artificielle</p>
+      </div>
+      <div class="actions-section">
+        <div class="period-selector">
+          <label class="me-2">Période :</label>
+          <select class="form-select" [(ngModel)]="selectedPeriod" (change)="updatePredictions()">
+            <option value="3months">3 mois</option>
+            <option value="6months">6 mois</option>
+            <option value="1year">1 an</option>
+          </select>
+        </div>
+        <button class="btn refresh-btn" (click)="updatePredictions()" [disabled]="isLoading">
+          <i class="fas" [ngClass]="{'fa-sync-alt': !isLoading, 'fa-spinner fa-spin': isLoading}"></i>
+          {{isLoading ? 'Chargement...' : 'Actualiser'}}
+        </button>
+      </div>
+    </div>
+  
+    <!-- Cartes de métriques -->
+    <div class="metrics-grid">
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-chart-line"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Dépenses Prévues</h3>
+          <p>{{formatCurrency(totalPredictedExpense)}}</p>
+        </div>
+      </div>
+  
+      <div class="metric-card">
+        <div class="metric-icon">
+          <i class="fas fa-bullseye"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Précision Moyenne</h3>
+          <p>{{formatPercentage(averageAccuracy)}}</p>
+        </div>
+      </div>
+  
+      <div class="metric-card">
+        <div class="metric-icon" [ngClass]="{
+          'success': trendDirection === 'down',
+          'warning': trendDirection === 'up',
+          'info': trendDirection === 'stable'
+        }">
+          <i class="fas" [ngClass]="{
+            'fa-arrow-up': trendDirection === 'up',
+            'fa-arrow-down': trendDirection === 'down',
+            'fa-equals': trendDirection === 'stable'
+          }"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Tendance</h3>
+          <p [ngClass]="{
+            'text-success': trendDirection === 'down',
+            'text-danger': trendDirection === 'up',
+            'text-info': trendDirection === 'stable'
+          }">
+            {{trendDirection === 'up' ? 'Hausse' : 
+              trendDirection === 'down' ? 'Baisse' : 'Stable'}}
+          </p>
+        </div>
+      </div>
+  
+      <div class="metric-card" [ngClass]="{'warning': anomalyDetected}">
+        <div class="metric-icon">
+          <i class="fas" [ngClass]="{
+            'fa-exclamation-triangle': anomalyDetected,
+            'fa-check-circle': !anomalyDetected
+          }"></i>
+        </div>
+        <div class="metric-content">
+          <h3>Anomalies</h3>
+          <p>{{anomalyDetected ? 'Détectées' : 'Aucune'}}</p>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Graphiques -->
+    <div class="charts-container">
+      <div class="chart-card">
+        <h3>Évolution des Dépenses</h3>
+        <canvas #predictionChart></canvas>
+      </div>
+      <div class="chart-card">
+        <h3>Précision du Modèle</h3>
+        <canvas #accuracyChart></canvas>
+      </div>
+    </div>
+  
+    <!-- Tableau des prédictions -->
+    <div class="predictions-table-container">
+      <table class="predictions-table">
+        <thead>
+          <tr>
+            <th>Mois</th>
+            <th>Dépenses Réelles</th>
+            <th>Prédictions</th>
+            <th>Précision</th>
+            <th>Écart</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let pred of predictions">
+            <td>{{pred.month}}</td>
+            <td>{{formatCurrency(pred.actualExpense)}}</td>
+            <td>{{formatCurrency(pred.predictedExpense)}}</td>
+            <td>
+              <div class="accuracy-badge" [ngClass]="{
+                'high': pred.accuracy >= 90,
+                'medium': pred.accuracy >= 80 && pred.accuracy < 90,
+                'low': pred.accuracy < 80
+              }">
+                {{formatPercentage(pred.accuracy)}}
+              </div>
+            </td>
+            <td>
+              <div class="variance-indicator" [ngClass]="{
+                'positive': pred.predictedExpense >= pred.actualExpense,
+                'negative': pred.predictedExpense < pred.actualExpense
+              }">
+                {{formatCurrency(Math.abs(pred.predictedExpense - pred.actualExpense))}}
+                <i class="fas" [ngClass]="{
+                  'fa-arrow-up': pred.predictedExpense >= pred.actualExpense,
+                  'fa-arrow-down': pred.predictedExpense < pred.actualExpense
+                }"></i>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  
+    <!-- Section Insights -->
+    <div class="insights-section">
+      <h3>
+        <i class="fas fa-lightbulb"></i>
+        Insights IA
+      </h3>
+      <div class="insights-grid">
+        <div class="insight-card" *ngIf="trendDirection !== 'stable'">
+          <div class="insight-icon" [ngClass]="{'warning': trendDirection === 'up', 'success': trendDirection === 'down'}">
+            <i class="fas fa-chart-line"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Tendance Détectée</h4>
+            <p>Les dépenses montrent une tendance à la {{trendDirection === 'up' ? 'hausse' : 'baisse'}} 
+               sur les prochains mois.</p>
+          </div>
+        </div>
+  
+        <div class="insight-card" *ngIf="anomalyDetected">
+          <div class="insight-icon warning">
+            <i class="fas fa-exclamation-triangle"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Anomalies Détectées</h4>
+            <p>Certaines variations importantes ont été détectées. Une analyse approfondie est recommandée.</p>
+          </div>
+        </div>
+  
+        <div class="insight-card">
+          <div class="insight-icon" [ngClass]="{
+            'success': averageAccuracy >= 90,
+            'warning': averageAccuracy < 80,
+            'info': averageAccuracy >= 80 && averageAccuracy < 90
+          }">
+            <i class="fas fa-bullseye"></i>
+          </div>
+          <div class="insight-content">
+            <h4>Précision du Modèle</h4>
+            <p>Le modèle maintient une précision moyenne de {{formatPercentage(averageAccuracy)}}.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" *ngIf="isLoading">
+      <div class="spinner-container">
+        <div class="spinner"></div>
+        <p>Mise à jour des prédictions...</p>
+      </div>
+    </div>
+  </div>
+  

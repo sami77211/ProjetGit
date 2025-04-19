@@ -1,0 +1,190 @@
+<div class="container-fluid py-4">
+    <!-- En-tête -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="d-flex justify-content-between align-items-center">
+          <h1 class="display-5 fw-bold text-primary">
+            <i class="fas fa-wallet me-2"></i>Gestion des Budgets
+          </h1>
+          <button class="btn btn-primary btn-lg" (click)="openModal('create')">
+            <i class="fas fa-plus-circle me-2"></i>Nouveau Budget
+          </button>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Cartes de statistiques -->
+    <div class="row g-4 mb-4">
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle bg-primary bg-opacity-10 p-3 me-3">
+                <i class="fas fa-money-bill-wave text-primary fa-2x"></i>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Budget Total</h6>
+                <h2 class="mb-0">{{totalBudget | currency:'EUR'}}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle bg-success bg-opacity-10 p-3 me-3">
+                <i class="fas fa-project-diagram text-success fa-2x"></i>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Nombre de Projets</h6>
+                <h2 class="mb-0">{{nombreProjets}}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="card h-100 border-0 shadow-sm">
+          <div class="card-body">
+            <div class="d-flex align-items-center">
+              <div class="rounded-circle bg-info bg-opacity-10 p-3 me-3">
+                <i class="fas fa-chart-line text-info fa-2x"></i>
+              </div>
+              <div>
+                <h6 class="text-muted mb-1">Budget Moyen</h6>
+                <h2 class="mb-0">{{moyenneBudget | currency:'EUR'}}</h2>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Tableau des budgets -->
+    <div class="card border-0 shadow-sm">
+      <div class="card-body">
+        <div class="table-responsive">
+          <table class="table table-hover align-middle">
+            <thead class="table-light">
+              <tr>
+                <th>Nom</th>
+                <th>Montant</th>
+                <th>Date</th>
+                <th>Projet</th>
+                <th></th>
+                <th class="text-end">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let budget of budgets">
+                <td>
+                  <div class="fw-bold">{{budget.nom}}</div>
+                </td>
+                <td>
+                  <div class="badge bg-success bg-opacity-10 text-success">
+                    {{budget.montant_total | currency:'EUR'}}
+                  </div>
+                </td>
+                <td>{{budget.date_allocation | date:'dd/MM/yyyy'}}</td>
+                <td>
+                  <span class="badge bg-primary bg-opacity-10 text-primary">
+                    {{budget.projet_associe}}
+                  </span>
+                </td>
+                <td>
+                 <!-- <div class="d-flex align-items-center">
+                    <div class="avatar-circle me-2">{{budget.responsable.charAt(0)}}</div>
+                    {{budget.responsable}}
+                  </div>-->
+                </td>
+                <td class="text-end">
+                  <button class="btn btn-sm btn-outline-primary me-2" (click)="openModal('edit', budget)">
+                    <i class="fas fa-edit me-1"></i>Modifier
+                  </button>
+                  <button class="btn btn-sm btn-outline-danger" (click)="deleteBudget(budget.id)">
+                    <i class="fas fa-trash-alt me-1"></i>Supprimer
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  
+    <!-- Modal -->
+    <div class="modal fade show" [class.d-block]="isModalOpen" [class.show]="isModalOpen">
+      <div class="modal-backdrop fade show" *ngIf="isModalOpen" (click)="closeModal()"></div>
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header bg-light">
+            <h5 class="modal-title">
+              {{modalMode === 'create' ? 'Nouveau Budget' : 'Modifier le Budget'}}
+            </h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="budgetForm" (ngSubmit)="onSubmit()" class="needs-validation">
+              <div class="mb-3">
+                <label class="form-label">Nom du budget</label>
+                <input type="text" class="form-control" formControlName="nom" 
+                       [class.is-invalid]="budgetForm.get('nom')?.invalid && budgetForm.get('nom')?.touched">
+                <div class="invalid-feedback" *ngIf="budgetForm.get('nom')?.invalid && budgetForm.get('nom')?.touched">
+                  Le nom est requis
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Montant total</label>
+                <div class="input-group">
+                  <span class="input-group-text">€</span>
+                  <input type="number" class="form-control" formControlName="montant_total"
+                         [class.is-invalid]="budgetForm.get('montant_total')?.invalid && budgetForm.get('montant_total')?.touched">
+                </div>
+                <div class="invalid-feedback" *ngIf="budgetForm.get('montant_total')?.invalid && budgetForm.get('montant_total')?.touched">
+                  Le montant doit être positif
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Date d'allocation</label>
+                <input type="date" class="form-control" formControlName="date_allocation"
+                       [class.is-invalid]="budgetForm.get('date_allocation')?.invalid && budgetForm.get('date_allocation')?.touched">
+                <div class="invalid-feedback" *ngIf="budgetForm.get('date_allocation')?.invalid && budgetForm.get('date_allocation')?.touched">
+                  La date est requise
+                </div>
+              </div>
+  
+              <div class="mb-3">
+                <label class="form-label">Projet associé</label>
+                <input type="text" class="form-control" formControlName="projet_associe"
+                       [class.is-invalid]="budgetForm.get('projet_associe')?.invalid && budgetForm.get('projet_associe')?.touched">
+                <div class="invalid-feedback" *ngIf="budgetForm.get('projet_associe')?.invalid && budgetForm.get('projet_associe')?.touched">
+                  Le projet est requis
+                </div>
+              </div>
+  
+              <div class="mb-3">
+              <label class="form-label">Responsable</label>
+                <input type="text" class="form-control" formControlName="responsable"
+                       [class.is-invalid]="budgetForm.get('responsable')?.invalid && budgetForm.get('responsable')?.touched">
+                <div class="invalid-feedback" *ngIf="budgetForm.get('responsable')?.invalid && budgetForm.get('responsable')?.touched">
+                  Le responsable est requis
+                </div>
+              </div>
+  
+              <div class="d-flex justify-content-end gap-2">
+                <button type="button" class="btn btn-light" (click)="closeModal()">Annuler</button>
+                <button type="submit" class="btn btn-primary" [disabled]="budgetForm.invalid">
+                  {{modalMode === 'create' ? 'Créer' : 'Modifier'}}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  

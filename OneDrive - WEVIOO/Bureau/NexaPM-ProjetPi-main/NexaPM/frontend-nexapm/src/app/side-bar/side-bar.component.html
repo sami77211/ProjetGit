@@ -1,0 +1,56 @@
+<div class="sidebar" [class.expanded]="isExpanded">
+    <!-- En-tête du Sidebar -->
+    <div class="sidebar-header">
+      <div class="logo-container">
+        <i class="fas fa-coins logo-icon"></i>
+        <span class="logo-text" *ngIf="isExpanded">FinanceAI</span>
+      </div>
+      <button class="toggle-btn" (click)="toggleSidebar()">
+        <i class="fas" [class.fa-chevron-left]="isExpanded" [class.fa-chevron-right]="!isExpanded"></i>
+      </button>
+    </div>
+  
+    <!-- Menu principal -->
+    <div class="menu-container">
+      <div class="menu-items">
+        <a *ngFor="let item of menuItems" 
+           [routerLink]="item.route"
+           routerLinkActive="active"
+           class="menu-item"
+           (click)="onMenuItemClick(item.route)"
+           [class.active]="isActive(item.route)"
+           [title]="!isExpanded ? item.label : ''">
+          
+          <div class="item-content">
+            <div class="icon-container">
+              <i [class]="item.icon"></i>
+            </div>
+            <span class="item-label" *ngIf="isExpanded">{{item.label}}</span>
+          </div>
+  
+          <div class="badge" *ngIf="item.badge && isExpanded">
+            {{item.badge}}
+          </div>
+        </a>
+      </div>
+    </div>
+  
+    <!-- Pied du Sidebar -->
+    <div class="sidebar-footer">
+      <div class="user-profile" *ngIf="isExpanded">
+        <div class="avatar">
+
+          <span class="status-dot"></span>
+        </div>
+        <div class="user-info">
+          <span class="username">John Doe</span>
+          <span class="user-role">Admin</span>
+        </div>
+      </div>
+      <button class="logout-btn" [title]="!isExpanded ? 'Déconnexion' : ''">
+        <i class="fas fa-sign-out-alt"></i>
+        <span *ngIf="isExpanded">Déconnexion</span>
+      </button>
+    </div>
+  </div>
+  
